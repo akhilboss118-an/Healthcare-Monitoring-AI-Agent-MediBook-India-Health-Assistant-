@@ -1,0 +1,64 @@
+# Install necessary libraries for Week 1
+!pip install -q langchain langchain-community pandas streamlit
+
+import pandas as pd
+import sqlite3
+import os
+
+print("Libraries installed and environment ready.")[cite: 1, 11]
+
+
+  # Create or connect to the healthcare database
+def init_db():
+    conn = sqlite3.connect('medibook_india.db')
+    cursor = conn.cursor()
+    
+    # Table for storing basic patient metrics
+    cursor.execute('''
+        CREATE TABLE IF NOT EXISTS patient_metrics (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            date TEXT,
+            steps INTEGER,
+            calories INTEGER
+        )
+    ''')
+    
+    # Table for storing medication reminders
+    cursor.execute('''
+        CREATE TABLE IF NOT EXISTS medication_reminders (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            med_name TEXT,
+            dosage TEXT,
+            time TEXT
+        )
+    ''')
+    
+    conn.commit()
+    conn.close()
+    print("Database 'medibook_india.db' initialized with tables.")[cite: 1, 11]
+
+init_db()
+
+
+# Basic function to simulate a medication reminder entry
+def add_medication(name, dose, time):
+    conn = sqlite3.connect('medibook_india.db')
+    cursor = conn.cursor()
+    cursor.execute("INSERT INTO medication_reminders (med_name, dosage, time) VALUES (?, ?, ?)", 
+                   (name, dose, time))
+    conn.commit()
+    conn.close()
+    return f"Successfully set reminder for {name} at {time}."[cite: 1]
+
+# Example usage
+print(add_medication("Paracetamol", "500mg", "08:00 PM"))[cite: 1]
+
+
+DISCLAIMER = (
+    "\n*** MEDICAL DISCLAIMER ***\n"
+    "This AI assistant is for informational purposes only and is not a "
+    "substitute for professional medical advice, diagnosis, or treatment. "
+    "Always seek the advice of your physician for any medical concerns."
+)[cite: 1, 11]
+
+print(DISCLAIMER)
